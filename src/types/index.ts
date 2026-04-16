@@ -49,6 +49,7 @@ export interface ResultadoHidratacao {
   taxaSudorese: number;
   perdaHidricaAbsoluta: number;
   perdaHidricaPercentual: number;
+  balanco: number;              // ml — positivo = hiperidratação, negativo = deficit
   reposicaoRecomendada: number;
   classificacaoPerda: ClassificacaoPerda;
   classificacaoUrina: ClassificacaoUrina;

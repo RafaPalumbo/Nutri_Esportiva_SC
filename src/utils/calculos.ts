@@ -23,7 +23,8 @@ function classificarUrina(corUrina: number): ClassificacaoUrina {
 function gerarAlertas(
   percentual: number,
   corUrina: number,
-  sintomas: string[]
+  sintomas: string[],
+  balanco: number
 ): string[] {
   const alertas: string[] = [];
 
@@ -38,6 +39,10 @@ function gerarAlertas(
   if (sintomas.includes("Tontura") || sintomas.includes("Náusea"))
     alertas.push("Sintomas relatados exigem atenção clínica.");
 
+  // Risco de superingestão (balanço positivo > 500ml indica ingestão excessiva)
+  if (balanco > 500)
+    alertas.push("Ingestão acima da perda. Risco de hiperidratação.");
+
   return alertas;
 }
 
@@ -45,23 +50,34 @@ export function calcularResultado(
   pre: DadosPreExercicio,
   pos: DadosPosExercicio
 ): ResultadoHidratacao {
-  const perdaAbsoluta = pre.massaCorporal - pos.massaCorporal;
-  const perdaPercentual = (perdaAbsoluta / pre.massaCorporal) * 100;
-
-  // Taxa de sudorese = (perda de peso em ml + volume ingerido) / duração em horas
   const duracaoHoras = pos.duracaoExercicio / 60;
-  const taxaSudorese = (perdaAbsoluta * 1000 + pos.volumeIngerido) / duracaoHoras;
 
-  // Reposição = 150% da perda para compensar perdas residuais
-  const reposicaoRecomendada = perdaAbsoluta * 1000 * 1.5;
+  // Perda de massa bruta em kg
+  const perdaBruta = pre.massaCorporal - pos.massaCorporal;
+
+  // Perda ajustada = perda bruta + fluidos ingeridos (convertido para kg, 1ml ≈ 1g)
+  const perdaAjustada = perdaBruta + pos.volumeIngerido / 1000;
+
+  // Percentual de variação de massa corporal
+  const perdaPercentual = (perdaBruta / pre.massaCorporal) * 100;
+
+  // Taxa de sudorese em ml/h
+  const taxaSudorese = (perdaAjustada * 1000) / duracaoHoras;
+
+  // Balanço hídrico = ingestão - perda estimada em ml
+  const balanco = pos.volumeIngerido - perdaAjustada * 1000;
+
+  // Reposição recomendada = 150% da perda bruta em ml
+  const reposicaoRecomendada = perdaBruta * 1000 * 1.5;
 
   return {
     taxaSudorese: Math.round(taxaSudorese),
-    perdaHidricaAbsoluta: parseFloat(perdaAbsoluta.toFixed(2)),
+    perdaHidricaAbsoluta: parseFloat(perdaBruta.toFixed(2)),
     perdaHidricaPercentual: parseFloat(perdaPercentual.toFixed(2)),
+    balanco: Math.round(balanco),
     reposicaoRecomendada: Math.round(reposicaoRecomendada),
     classificacaoPerda: classificarPerda(perdaPercentual),
     classificacaoUrina: classificarUrina(pre.corUrina),
-    alertas: gerarAlertas(perdaPercentual, pre.corUrina, pre.sintomas),
+    alertas: gerarAlertas(perdaPercentual, pre.corUrina, pre.sintomas, balanco),
   };
 }
