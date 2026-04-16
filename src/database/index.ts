@@ -1,0 +1,81 @@
+import * as SQLite from "expo-sqlite";
+import { Avaliacao, Atleta, Equipe } from "../types";
+
+const db = SQLite.openDatabaseSync("deltah.db");
+
+export function initDatabase(): void {
+  db.execSync(`
+    CREATE TABLE IF NOT EXISTS equipes (
+      id TEXT PRIMARY KEY,
+      nome TEXT NOT NULL,
+      esporte TEXT NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS atletas (
+      id TEXT PRIMARY KEY,
+      nome TEXT NOT NULL,
+      dataNascimento TEXT NOT NULL,
+      esporte TEXT NOT NULL,
+      equipeId TEXT,
+      FOREIGN KEY (equipeId) REFERENCES equipes(id)
+    );
+
+    CREATE TABLE IF NOT EXISTS avaliacoes (
+      id TEXT PRIMARY KEY,
+      atletaId TEXT NOT NULL,
+      data TEXT NOT NULL,
+      dados TEXT NOT NULL,
+      FOREIGN KEY (atletaId) REFERENCES atletas(id)
+    );
+  `);
+}
+
+//Equipes
+export function inserirEquipe(equipe: Equipe): void {
+  db.runSync(
+    `INSERT INTO equipes (id, nome, esporte) VALUES (?, ?, ?)`,
+    [equipe.id, equipe.nome, equipe.esporte]
+  );
+}
+
+export function listarEquipes(): Equipe[] {
+  return db.getAllSync<Equipe>(`SELECT * FROM equipes`);
+}
+
+//Atletas
+export function inserirAtleta(atleta: Atleta): void {
+  db.runSync(
+    `INSERT INTO atletas (id, nome, dataNascimento, esporte, equipeId)
+     VALUES (?, ?, ?, ?, ?)`,
+    [atleta.id, atleta.nome, atleta.dataNascimento, atleta.esporte, atleta.equipeId ?? null]
+  );
+}
+
+export function listarAtletas(): Atleta[] {
+  return db.getAllSync<Atleta>(`SELECT * FROM atletas`);
+}
+
+export function listarAtletasPorEquipe(equipeId: string): Atleta[] {
+  return db.getAllSync<Atleta>(
+    `SELECT * FROM atletas WHERE equipeId = ?`,
+    [equipeId]
+  );
+}
+
+//Avaliações
+
+
+export function inserirAvaliacao(avaliacao: Avaliacao): void {
+  db.runSync(
+    `INSERT INTO avaliacoes (id, atletaId, data, dados) VALUES (?, ?, ?, ?)`,
+    [avaliacao.id, avaliacao.atletaId, avaliacao.data, JSON.stringify(avaliacao)]
+  );
+}
+
+export function listarAvaliacoesPorAtleta(atletaId: string): Avaliacao[] {
+  const rows = db.getAllSync<{ dados: string }>(
+    `SELECT dados FROM avaliacoes WHERE atletaId = ? ORDER BY data DESC`,
+    [atletaId]
+  );
+  return rows.map((row) => JSON.parse(row.dados));
+}
