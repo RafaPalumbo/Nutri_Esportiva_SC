@@ -18,8 +18,7 @@ export interface DadosPreExercicio {
 export interface DadosAmbiente {
   temperatura: number;          // °C
   umidade: number;              // %
-  cidade: string;mkdir src\utils
-echo "" > src\utils\calculos.ts
+  cidade: string;
 }
 
 export interface DadosPosExercicio {
