@@ -11,6 +11,7 @@ import Resultado from "../screens/Resultado";
 import Login from "../screens/Login";
 import PesoEstadoBasal from "../screens/PesoEstadoBasal";
 import DadosPosExercicio from "../screens/DadosPosExercicio";
+import Historico from "../screens/Historico";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -20,6 +21,7 @@ export type RootStackParamList = {
     preExercicio: DadosPreExercicio;
     posExercicio: DadosPosExercicioType;
   };
+  Historico: { atletaId: string };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -43,6 +45,7 @@ export default function Navigation() {
             <Stack.Screen name="PesoEstadoBasal" component={PesoEstadoBasal} />
             <Stack.Screen name="DadosPosExercicio" component={DadosPosExercicio} />
             <Stack.Screen name="Resultado" component={Resultado} />
+            <Stack.Screen name="Historico" component={Historico} />
           </>
         ) : (
           <Stack.Screen name="Login" component={Login} />

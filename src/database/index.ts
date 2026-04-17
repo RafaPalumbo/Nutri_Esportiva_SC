@@ -1,16 +1,25 @@
-import * as SQLite from "expo-sqlite";
+import { Platform } from "react-native";
 import { Avaliacao, Atleta, Equipe } from "../types";
 
-const db = SQLite.openDatabaseSync("deltah.db");
+const isWeb = true;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let db: any = null;
+
+if (!isWeb) {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const SQLite = require("expo-sqlite");
+  db = SQLite.openDatabaseSync("deltah.db");
+}
 
 export function initDatabase(): void {
+  if (isWeb) return;
   db.execSync(`
     CREATE TABLE IF NOT EXISTS equipes (
       id TEXT PRIMARY KEY,
       nome TEXT NOT NULL,
       esporte TEXT NOT NULL
     );
-
     CREATE TABLE IF NOT EXISTS atletas (
       id TEXT PRIMARY KEY,
       nome TEXT NOT NULL,
@@ -19,7 +28,6 @@ export function initDatabase(): void {
       equipeId TEXT,
       FOREIGN KEY (equipeId) REFERENCES equipes(id)
     );
-
     CREATE TABLE IF NOT EXISTS avaliacoes (
       id TEXT PRIMARY KEY,
       atletaId TEXT NOT NULL,
@@ -30,42 +38,37 @@ export function initDatabase(): void {
   `);
 }
 
-//Equipes
 export function inserirEquipe(equipe: Equipe): void {
-  db.runSync(
-    `INSERT INTO equipes (id, nome, esporte) VALUES (?, ?, ?)`,
-    [equipe.id, equipe.nome, equipe.esporte]
-  );
+  if (isWeb) return;
+  db.runSync(`INSERT INTO equipes (id, nome, esporte) VALUES (?, ?, ?)`,
+    [equipe.id, equipe.nome, equipe.esporte]);
 }
 
 export function listarEquipes(): Equipe[] {
-  return db.getAllSync<Equipe>(`SELECT * FROM equipes`);
+  if (isWeb) return [];
+  return db.getAllSync(`SELECT * FROM equipes`) as Equipe[];
 }
 
-//Atletas
 export function inserirAtleta(atleta: Atleta): void {
+  if (isWeb) return;
   db.runSync(
-    `INSERT INTO atletas (id, nome, dataNascimento, esporte, equipeId)
-     VALUES (?, ?, ?, ?, ?)`,
+    `INSERT INTO atletas (id, nome, dataNascimento, esporte, equipeId) VALUES (?, ?, ?, ?, ?)`,
     [atleta.id, atleta.nome, atleta.dataNascimento, atleta.esporte, atleta.equipeId ?? null]
   );
 }
 
 export function listarAtletas(): Atleta[] {
-  return db.getAllSync<Atleta>(`SELECT * FROM atletas`);
+  if (isWeb) return [];
+  return db.getAllSync(`SELECT * FROM atletas`) as Atleta[];
 }
 
 export function listarAtletasPorEquipe(equipeId: string): Atleta[] {
-  return db.getAllSync<Atleta>(
-    `SELECT * FROM atletas WHERE equipeId = ?`,
-    [equipeId]
-  );
+  if (isWeb) return [];
+  return db.getAllSync(`SELECT * FROM atletas WHERE equipeId = ?`, [equipeId]) as Atleta[];
 }
 
-//Avaliações
-
-
 export function inserirAvaliacao(avaliacao: Avaliacao): void {
+  if (isWeb) return;
   db.runSync(
     `INSERT INTO avaliacoes (id, atletaId, data, dados) VALUES (?, ?, ?, ?)`,
     [avaliacao.id, avaliacao.atletaId, avaliacao.data, JSON.stringify(avaliacao)]
@@ -73,9 +76,10 @@ export function inserirAvaliacao(avaliacao: Avaliacao): void {
 }
 
 export function listarAvaliacoesPorAtleta(atletaId: string): Avaliacao[] {
-  const rows = db.getAllSync<{ dados: string }>(
+  if (isWeb) return [];
+  const rows = db.getAllSync(
     `SELECT dados FROM avaliacoes WHERE atletaId = ? ORDER BY data DESC`,
     [atletaId]
-  );
-  return rows.map((row) => JSON.parse(row.dados));
+  ) as { dados: string }[];
+  return rows.map((row) => JSON.parse(row.dados) as Avaliacao);
 }

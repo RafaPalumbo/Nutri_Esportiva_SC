@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import Header from "../components/Header";
 import { colors, fontSize, radius, spacing } from "../theme";
 import { calcularResultado } from "../utils/calculos";
 import { ClassificacaoPerda } from "../types";
+import { inserirAvaliacao } from "../database";
+import { useAuth } from "../context/AuthContext";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Resultado">;
 
@@ -33,6 +35,26 @@ const LABELS_CLASSIFICACAO: Record<ClassificacaoPerda, string> = {
 export default function Resultado({ navigation, route }: Props) {
   const { preExercicio, posExercicio } = route.params;
   const resultado = calcularResultado(preExercicio, posExercicio);
+  const { usuario } = useAuth();
+
+  useEffect(() => {
+  try {
+    const avaliacao = {
+      id: Date.now().toString(),
+      atletaId: usuario?.id ?? "1",
+      data: new Date().toISOString(),
+      preExercicio,
+      posExercicio,
+      resultado,
+    };
+    const existentes = JSON.parse(localStorage.getItem(`avaliacoes_${avaliacao.atletaId}`) ?? "[]");
+    existentes.unshift(avaliacao);
+    localStorage.setItem(`avaliacoes_${avaliacao.atletaId}`, JSON.stringify(existentes));
+    console.log("salvo direto!", localStorage.getItem(`avaliacoes_${avaliacao.atletaId}`));
+  } catch (e) {
+    console.error("erro ao salvar:", e);
+  }
+}, []);
 
   return (
     <View style={s.root}>
@@ -45,32 +67,23 @@ export default function Resultado({ navigation, route }: Props) {
           locations={[0, 0.3, 1]}
           style={s.card}
         >
-          {/* Taxa de Sudorese */}
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Taxa de Sudorese</Text>
             <Text style={s.metricValor}>{resultado.taxaSudorese} ml/h</Text>
           </View>
 
-          {/* Perda Hídrica */}
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Perda Hídrica</Text>
             <Text style={s.metricValor}>{resultado.perdaHidricaPercentual}%</Text>
           </View>
 
-          {/* Classificação */}
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Classificação</Text>
-            <View style={[
-              s.badge,
-              { backgroundColor: CORES_CLASSIFICACAO[resultado.classificacaoPerda] }
-            ]}>
-              <Text style={s.badgeText}>
-                {LABELS_CLASSIFICACAO[resultado.classificacaoPerda]}
-              </Text>
+            <View style={[s.badge, { backgroundColor: CORES_CLASSIFICACAO[resultado.classificacaoPerda] }]}>
+              <Text style={s.badgeText}>{LABELS_CLASSIFICACAO[resultado.classificacaoPerda]}</Text>
             </View>
           </View>
 
-          {/* Balanço Hídrico */}
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Balanço Hídrico</Text>
             <Text style={s.metricValor}>
@@ -78,28 +91,26 @@ export default function Resultado({ navigation, route }: Props) {
             </Text>
           </View>
 
-          {/* Reposição Recomendada */}
           <View style={[s.metricRow, s.destaque]}>
             <Text style={s.metricLabel}>Repor ainda</Text>
-            <Text style={s.metricValorDestaque}>
-              {resultado.reposicaoRecomendada} ml
-            </Text>
+            <Text style={s.metricValorDestaque}>{resultado.reposicaoRecomendada} ml</Text>
           </View>
 
-          {/* Alertas */}
           {resultado.alertas.length > 0 && (
             <View style={s.alertasContainer}>
-              <Text style={s.alertasTitulo}>⚠ Alertas</Text>
+              <Text style={s.alertasTitulo}>Alertas</Text>
               {resultado.alertas.map((alerta, i) => (
                 <Text key={i} style={s.alertaItem}>• {alerta}</Text>
               ))}
             </View>
           )}
 
-          {/* Botões */}
           <View style={s.botoes}>
             <TouchableOpacity onPress={() => navigation.popToTop()}>
-              <Text style={s.btnNova}>Nova Avaliação</Text>
+              <Text style={s.btn}>Nova Avaliação</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => navigation.navigate("Historico", { atletaId: usuario?.id ?? "1" })}>
+              <Text style={s.btn}>Ver Histórico</Text>
             </TouchableOpacity>
           </View>
         </LinearGradient>
@@ -184,8 +195,9 @@ const s = StyleSheet.create({
   botoes: {
     alignItems: "center",
     marginTop: spacing.lg,
+    gap: spacing.sm,
   },
-  btnNova: {
+  btn: {
     color: colors.white,
     fontWeight: "700",
     fontSize: fontSize.md,
@@ -194,5 +206,6 @@ const s = StyleSheet.create({
     borderRadius: radius.md,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.sm,
+    textAlign: "center",
   },
 });
