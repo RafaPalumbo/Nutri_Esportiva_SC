@@ -4,6 +4,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import Header from "../components/Header";
 import CheckItem from "../components/CheckItem";
 import { colors, spacing, radius, fontSize } from "../theme";
+import ClimaWidget from "../components/ClimaWidget";
+import { DadosAmbiente } from "../types";
 
 const SINTOMAS = ["Náusea", "Fadiga", "Tontura", "Outro"];
 
@@ -15,6 +17,7 @@ export default function PesoEstadoBasal() {
     const [historicoHidratacao, setHistoricoHidratacao] = useState("");
     const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>([]);
     const [outro, setOutro] = useState("");
+    const [ambiente, setAmbiente] = useState<DadosAmbiente | null>(null);
 
     const toggleSintoma = (sintoma: string) => {
         setSintomasSelecionados((prev) =>
@@ -30,9 +33,10 @@ export default function PesoEstadoBasal() {
 
                 <LinearGradient
                     colors={["#8B0000", "#C8000A", "#D63031"]}
-                    locations={[0, 1]}
+                    locations={[0, 0.3, 1]}
                     style={s.card}
                 >
+                    <ClimaWidget onClimaCarregado={(dados) => setAmbiente(dados)} />
                     {/* Massa corporal */}
                     <Text style={s.label}>Massa corporal pré-exercício (kg) *</Text>
                     <TextInput

@@ -61,3 +61,12 @@ export interface Equipe {
   nome: string;
   esporte: string;
 }
+
+export interface DadosAmbiente {
+  temperatura: number;          // °C
+  umidade: number;              // %
+  tempMax: number;              // °C
+  tempMin: number;              // °C
+  chuva: boolean;
+  cidade: string;
+}
