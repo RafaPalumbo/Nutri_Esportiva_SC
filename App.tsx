@@ -1,6 +1,11 @@
 import "./global.css";
-import PesoEstadoBasal from "./src/screens/PesoEstadoBasal";
+import { AuthProvider } from "./src/context/AuthContext";
+import Navigation from "./src/navigation";
 
 export default function App() {
-  return <PesoEstadoBasal />;
+  return (
+    <AuthProvider>
+      <Navigation />
+    </AuthProvider>
+  );
 }
