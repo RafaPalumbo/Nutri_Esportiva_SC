@@ -36,8 +36,7 @@ export default function Historico({ route, navigation }: Props) {
 
  useFocusEffect(
   useCallback(() => {
-    const raw = localStorage.getItem(`avaliacoes_${atletaId}`);
-    const dados = raw ? (JSON.parse(raw) as Avaliacao[]) : [];
+    const dados = listarAvaliacoesPorAtleta(atletaId);
     setAvaliacoes(dados);
   }, [atletaId])
 );

@@ -38,23 +38,20 @@ export default function Resultado({ navigation, route }: Props) {
   const { usuario } = useAuth();
 
   useEffect(() => {
-  try {
-    const avaliacao = {
-      id: Date.now().toString(),
-      atletaId: usuario?.id ?? "1",
-      data: new Date().toISOString(),
-      preExercicio,
-      posExercicio,
-      resultado,
-    };
-    const existentes = JSON.parse(localStorage.getItem(`avaliacoes_${avaliacao.atletaId}`) ?? "[]");
-    existentes.unshift(avaliacao);
-    localStorage.setItem(`avaliacoes_${avaliacao.atletaId}`, JSON.stringify(existentes));
-    console.log("salvo direto!", localStorage.getItem(`avaliacoes_${avaliacao.atletaId}`));
-  } catch (e) {
-    console.error("erro ao salvar:", e);
-  }
-}, []);
+    try {
+      const avaliacao = {
+        id: Date.now().toString(),
+        atletaId: usuario?.id ?? "1",
+        data: new Date().toISOString(),
+        preExercicio,
+        posExercicio,
+        resultado,
+      };
+      inserirAvaliacao(avaliacao);
+    } catch (e) {
+      console.error("erro ao salvar:", e);
+    }
+  }, []);
 
   return (
     <View style={s.root}>

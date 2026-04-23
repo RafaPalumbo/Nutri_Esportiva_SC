@@ -1,13 +1,12 @@
 import { Platform } from "react-native";
 import { Avaliacao, Atleta, Equipe } from "../types";
 
-const isWeb = true;
+const isWeb = typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let db: any = null;
 
 if (!isWeb) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const SQLite = require("expo-sqlite");
   db = SQLite.openDatabaseSync("deltah.db");
 }
@@ -68,7 +67,13 @@ export function listarAtletasPorEquipe(equipeId: string): Atleta[] {
 }
 
 export function inserirAvaliacao(avaliacao: Avaliacao): void {
-  if (isWeb) return;
+  if (isWeb) {
+    const key = `avaliacoes_${avaliacao.atletaId}`;
+    const existentes: Avaliacao[] = JSON.parse(localStorage.getItem(key) ?? "[]");
+    existentes.unshift(avaliacao);
+    localStorage.setItem(key, JSON.stringify(existentes));
+    return;
+  }
   db.runSync(
     `INSERT INTO avaliacoes (id, atletaId, data, dados) VALUES (?, ?, ?, ?)`,
     [avaliacao.id, avaliacao.atletaId, avaliacao.data, JSON.stringify(avaliacao)]
@@ -76,7 +81,10 @@ export function inserirAvaliacao(avaliacao: Avaliacao): void {
 }
 
 export function listarAvaliacoesPorAtleta(atletaId: string): Avaliacao[] {
-  if (isWeb) return [];
+  if (isWeb) {
+    const raw = localStorage.getItem(`avaliacoes_${atletaId}`);
+    return raw ? JSON.parse(raw) as Avaliacao[] : [];
+  }
   const rows = db.getAllSync(
     `SELECT dados FROM avaliacoes WHERE atletaId = ? ORDER BY data DESC`,
     [atletaId]
