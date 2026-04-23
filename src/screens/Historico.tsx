@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useFocusEffect } from "@react-navigation/native";
-import { RootStackParamList } from "../navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Header from "../components/Header";
 import { colors, fontSize, radius, spacing } from "../theme";
 import { listarAvaliacoesPorAtleta } from "../database";
 import { Avaliacao, ClassificacaoPerda } from "../types";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Historico">;
+interface Props {
+  atletaId: string;
+}
 
 const CORES_CLASSIFICACAO: Record<ClassificacaoPerda, string> = {
   leve: "#81C784",
@@ -30,11 +31,10 @@ const LABELS_CLASSIFICACAO: Record<ClassificacaoPerda, string> = {
   critica: "Crítica",
 };
 
-export default function Historico({ route, navigation }: Props) {
-  const { atletaId } = route.params;
+export default function Historico({ atletaId }: Props) {
   const [avaliacoes, setAvaliacoes] = useState<Avaliacao[]>([]);
 
- useFocusEffect(
+  useFocusEffect(
   useCallback(() => {
     const dados = listarAvaliacoesPorAtleta(atletaId);
     setAvaliacoes(dados);
@@ -42,7 +42,7 @@ export default function Historico({ route, navigation }: Props) {
 );
 
   return (
-    <View style={s.root}>
+    <SafeAreaView style={s.root}>
       <Header titulo="Nutri-Esportiva - São Camilo" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Histórico de Avaliações.</Text>
@@ -91,12 +91,8 @@ export default function Historico({ route, navigation }: Props) {
             );
           })
         )}
-
-        <TouchableOpacity style={s.btnNova} onPress={() => navigation.popToTop()}>
-          <Text style={s.btnNovaText}>+ Nova Avaliação</Text>
-        </TouchableOpacity>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -172,17 +168,5 @@ const s = StyleSheet.create({
     marginTop: spacing.sm,
     fontSize: fontSize.xs,
     color: "#FF7043",
-  },
-  btnNova: {
-    backgroundColor: colors.primary,
-    borderRadius: radius.md,
-    padding: spacing.md,
-    alignItems: "center",
-    marginTop: spacing.sm,
-  },
-  btnNovaText: {
-    color: colors.white,
-    fontWeight: "700",
-    fontSize: fontSize.md,
   },
 });
