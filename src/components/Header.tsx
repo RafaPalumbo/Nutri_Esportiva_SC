@@ -1,6 +1,6 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors, fontSize, radius, spacing } from "../theme";
+import { View, Text, StyleSheet, Image } from "react-native";
+import { colors, fontSize, spacing, radius } from "../theme";
 
 interface Props {
   titulo: string;
@@ -9,9 +9,11 @@ interface Props {
 export default function Header({ titulo }: Props) {
   return (
     <View style={s.container}>
-      <View style={s.logo}>
-        <Text style={s.logoIcon}>✦</Text>
-      </View>
+      <Image
+        source={require("../../assets/logo.png")}
+        style={s.logo}
+        resizeMode="contain"
+      />
       <Text style={s.titulo}>{titulo}</Text>
     </View>
   );
@@ -30,16 +32,7 @@ const s = StyleSheet.create({
   logo: {
     width: 32,
     height: 32,
-    borderRadius: radius.sm,
-    backgroundColor: colors.primary,
-    alignItems: "center",
-    justifyContent: "center",
     marginRight: spacing.sm,
-  },
-  logoIcon: {
-    color: colors.white,
-    fontSize: fontSize.md,
-    fontWeight: "bold",
   },
   titulo: {
     fontSize: fontSize.lg,
