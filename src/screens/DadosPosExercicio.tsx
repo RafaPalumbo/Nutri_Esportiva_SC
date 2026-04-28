@@ -52,7 +52,7 @@ export default function DadosPosExercicio({ navigation, route }: Props) {
 
   return (
     <View style={s.root}>
-      <Header titulo="Nutri-Esportiva - São Camilo" />
+      <Header titulo= "DeltaH" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Dados Pós-Exercício.</Text>
 

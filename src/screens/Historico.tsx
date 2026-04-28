@@ -43,7 +43,7 @@ export default function Historico({ atletaId }: Props) {
 
   return (
     <SafeAreaView style={s.root}>
-      <Header titulo="Nutri-Esportiva - São Camilo" />
+      <Header titulo= "DeltaH" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Histórico de Avaliações.</Text>
 

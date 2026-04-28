@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity, Text, View, TextInput } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header from "../components/Header";
 import CheckItem from "../components/CheckItem";
 import { colors, spacing, radius, fontSize } from "../theme";
 import ClimaWidget from "../components/ClimaWidget";
 import { DadosAmbiente } from "../types";
-import { RootStackParamList } from "../navigation";
-
-type Props = NativeStackScreenProps<RootStackParamList, "PesoEstadoBasal">;
 
 const SINTOMAS = ["Náusea", "Fadiga", "Tontura", "Outro"];
 
-export default function PesoEstadoBasal({ navigation }: Props) {
+export default function PesoEstadoBasal({ navigation }: any) {
   const [massa, setMassa] = useState("");
   const [pesadoCorretamente, setPesadoCorretamente] = useState(false);
   const [corSelecionada, setCorSelecionada] = useState<number | null>(null);
@@ -31,7 +27,6 @@ export default function PesoEstadoBasal({ navigation }: Props) {
 
   function handleAvancar() {
     if (!massa || corSelecionada === null) return;
-
     navigation.navigate("DadosPosExercicio", {
       preExercicio: {
         massaCorporal: parseFloat(massa),
@@ -46,10 +41,9 @@ export default function PesoEstadoBasal({ navigation }: Props) {
 
   return (
     <View style={s.root}>
-      <Header titulo="Nutri-Esportiva - São Camilo" />
+      <Header titulo="DeltaH" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Peso e Estado Basal.</Text>
-
         <LinearGradient
           colors={["#8B0000", "#C8000A", "#D63031"]}
           locations={[0, 0.3, 1]}

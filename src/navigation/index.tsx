@@ -10,6 +10,7 @@ import { colors } from "../theme";
 import { DadosPreExercicio, DadosPosExercicio as DadosPosExercicioType } from "../types";
 
 import Login from "../screens/Login";
+import Cadastro from "../screens/Cadastro";
 import PesoEstadoBasal from "../screens/PesoEstadoBasal";
 import DadosPosExercicio from "../screens/DadosPosExercicio";
 import Resultado from "../screens/Resultado";
@@ -18,6 +19,7 @@ import Conta from "../screens/Conta";
 
 export type RootStackParamList = {
   Login: undefined;
+  Cadastro: undefined;
   MainTabs: undefined;
   DadosPosExercicio: { preExercicio: DadosPreExercicio };
   Resultado: {
@@ -128,7 +130,10 @@ export default function Navigation() {
               <Stack.Screen name="Resultado" component={Resultado} />
             </>
           ) : (
-            <Stack.Screen name="Login" component={Login} />
+            <>
+              <Stack.Screen name="Login" component={Login} />
+              <Stack.Screen name="Cadastro" component={Cadastro} />
+            </>
           )}
         </Stack.Navigator>
       </NavigationContainer>

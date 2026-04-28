@@ -7,16 +7,12 @@ import {
   StyleSheet,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../navigation";
 import Header from "../components/Header";
 import { colors, fontSize, radius, spacing } from "../theme";
 import { calcularResultado } from "../utils/calculos";
 import { ClassificacaoPerda } from "../types";
 import { inserirAvaliacao } from "../database";
 import { useAuth } from "../context/AuthContext";
-
-type Props = NativeStackScreenProps<RootStackParamList, "Resultado">;
 
 const CORES_CLASSIFICACAO: Record<ClassificacaoPerda, string> = {
   leve: "#81C784",
@@ -32,22 +28,21 @@ const LABELS_CLASSIFICACAO: Record<ClassificacaoPerda, string> = {
   critica: "Crítica",
 };
 
-export default function Resultado({ navigation, route }: Props) {
+export default function Resultado({ navigation, route }: any) {
   const { preExercicio, posExercicio } = route.params;
   const resultado = calcularResultado(preExercicio, posExercicio);
   const { usuario } = useAuth();
 
   useEffect(() => {
     try {
-      const avaliacao = {
+      inserirAvaliacao({
         id: Date.now().toString(),
         atletaId: usuario?.id ?? "1",
         data: new Date().toISOString(),
         preExercicio,
         posExercicio,
         resultado,
-      };
-      inserirAvaliacao(avaliacao);
+      });
     } catch (e) {
       console.error("erro ao salvar:", e);
     }
@@ -55,7 +50,7 @@ export default function Resultado({ navigation, route }: Props) {
 
   return (
     <View style={s.root}>
-      <Header titulo="Nutri-Esportiva - São Camilo" />
+      <Header titulo="DeltaH" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Resultado da Avaliação.</Text>
 
@@ -106,7 +101,7 @@ export default function Resultado({ navigation, route }: Props) {
             <TouchableOpacity onPress={() => navigation.popToTop()}>
               <Text style={s.btn}>Nova Avaliação</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => navigation.navigate("Historico", { atletaId: usuario?.id ?? "1" })}>
+            <TouchableOpacity onPress={() => navigation.popToTop()}>
               <Text style={s.btn}>Ver Histórico</Text>
             </TouchableOpacity>
           </View>
