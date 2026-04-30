@@ -13,6 +13,7 @@
     "@react-navigation/bottom-tabs": "^7.15.9",
     "@react-navigation/native": "^7.2.2",
     "@react-navigation/native-stack": "^7.14.11",
+    "@supabase/supabase-js": "^2.105.1",
     "babel-preset-expo": "^55.0.17",
     "expo": "~54.0.33",
     "expo-linear-gradient": "~15.0.8",
@@ -34,5 +35,18 @@
     "tailwindcss": "^3.3.2",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": true,
+  "description": "Aplicação para avaliação da taxa de sudorese e suporte à hidratação esportiva.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RafaPalumbo/Nutri_Esportiva_SC.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/RafaPalumbo/Nutri_Esportiva_SC/issues"
+  },
+  "homepage": "https://github.com/RafaPalumbo/Nutri_Esportiva_SC#readme"
 }

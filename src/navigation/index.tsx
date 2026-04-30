@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { ActivityIndicator, View, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "../theme";
-import { DadosPreExercicio, DadosPosExercicio as DadosPosExercicioType } from "../types";
+
 
 import Login from "../screens/Login";
 import Cadastro from "../screens/Cadastro";
@@ -16,6 +16,8 @@ import DadosPosExercicio from "../screens/DadosPosExercicio";
 import Resultado from "../screens/Resultado";
 import Historico from "../screens/Historico";
 import Conta from "../screens/Conta";
+
+import { DadosPreExercicio, DadosPosExercicio as DadosPosExercicioType } from "../types";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -62,7 +64,7 @@ function MainTabs() {
         name="Inicio"
         options={{
           tabBarLabel: "Início",
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
               size={24}
@@ -71,14 +73,14 @@ function MainTabs() {
           ),
         }}
       >
-        {(props: any) => <PesoEstadoBasal {...props} />}
+        {(props) => <PesoEstadoBasal {...props} />}
       </Tab.Screen>
 
       <Tab.Screen
         name="HistoricoTab"
         options={{
           tabBarLabel: "Histórico",
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "time" : "time-outline"}
               size={24}
@@ -87,7 +89,7 @@ function MainTabs() {
           ),
         }}
       >
-        {() => <Historico atletaId={usuario?.id ?? "1"} />}
+        {() => <Historico atletaId={usuario?.id ?? ""} />}
       </Tab.Screen>
 
       <Tab.Screen
@@ -95,7 +97,7 @@ function MainTabs() {
         component={Conta}
         options={{
           tabBarLabel: "Conta",
-          tabBarIcon: ({ focused }: { focused: boolean }) => (
+          tabBarIcon: ({ focused }) => (
             <Ionicons
               name={focused ? "person" : "person-outline"}
               size={24}
@@ -105,6 +107,25 @@ function MainTabs() {
         }}
       />
     </Tab.Navigator>
+  );
+}
+
+function AuthStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Cadastro" component={Cadastro} />
+    </Stack.Navigator>
+  );
+}
+
+function AppStack() {
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="MainTabs" component={MainTabs} />
+      <Stack.Screen name="DadosPosExercicio" component={DadosPosExercicio} />
+      <Stack.Screen name="Resultado" component={Resultado} />
+    </Stack.Navigator>
   );
 }
 
@@ -122,20 +143,7 @@ export default function Navigation() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {logado ? (
-            <>
-              <Stack.Screen name="MainTabs" component={MainTabs} />
-              <Stack.Screen name="DadosPosExercicio" component={DadosPosExercicio} />
-              <Stack.Screen name="Resultado" component={Resultado} />
-            </>
-          ) : (
-            <>
-              <Stack.Screen name="Login" component={Login} />
-              <Stack.Screen name="Cadastro" component={Cadastro} />
-            </>
-          )}
-        </Stack.Navigator>
+        {logado ? <AppStack /> : <AuthStack />}
       </NavigationContainer>
     </SafeAreaProvider>
   );

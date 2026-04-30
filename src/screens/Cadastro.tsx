@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { supabase } from "../../src/services/supabase";
 import {
   View,
   Text,
@@ -41,20 +42,25 @@ export default function Cadastro({ navigation }: any) {
     setErro("");
 
     try {
-      // Mock temporário — substituir por chamada real à API
-      const mockToken =
-        "eyJhbGciOiJIUzI1NiJ9." +
-        btoa(JSON.stringify({
-          usuario: {
-            id: Date.now().toString(),
+      const { data, error } = await supabase
+        .from("usuarios")
+        .insert([
+          {
             nome,
             email,
             perfil,
           },
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-        })) +
-        ".assinatura";
-      await login(mockToken);
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        setErro(error.message);
+        return;
+      }
+
+      await login(JSON.stringify({ usuario: data }));
+
     } finally {
       setCarregando(false);
     }
