@@ -11,3 +11,14 @@ Aplicação para avaliação da taxa de sudorese e suporte à hidratação espor
 - Gera histórico de avaliações e exporta relatórios em PDF
 
 > ⚠️ O DeltaH é uma ferramenta de apoio à decisão. Não substitui avaliação médica ou nutricional.
+
+
+## Integrantes
+
+| Nome                                | RA           |
+|-------------------------------------|--------------|
+| Jordana Barbosa Balestrin           | 25.00907-7   |
+| Julio Murata                        | 25.00881-4   |
+| Rafael Palumbo                      | 25.00888-9   |
+| Patrick Araujo dos Santos           | 25.01311-1   |
+
