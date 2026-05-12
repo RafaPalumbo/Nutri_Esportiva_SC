@@ -148,16 +148,22 @@ export default function Historico({ atletaId }: Props) {
     setMensagemExportacao(retorno.mensagem);
   }
 
+  function handleExportarSessao(avaliacao: Avaliacao) {
+    const retorno = exportarCsvAvaliacoes([avaliacao]);
+    setMensagemExportacao(retorno.mensagem);
+  }
+
   return (
     <SafeAreaView style={s.root}>
       <Header titulo="DeltaH" />
+
       <ScrollView contentContainerStyle={s.scroll}>
         <View style={s.tituloRow}>
           <Text style={s.sectionTitle}>• Histórico de Avaliações.</Text>
 
           {totalSessoes > 0 && (
             <TouchableOpacity style={s.btnExportar} onPress={handleExportarCsv}>
-              <Text style={s.btnExportarText}>Exportar CSV</Text>
+              <Text style={s.btnExportarText}>Exportar tudo</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -258,6 +264,7 @@ export default function Historico({ atletaId }: Props) {
                   {ambiente && (
                     <View style={s.infoBox}>
                       <Text style={s.infoTitulo}>Ambiente</Text>
+
                       <Text style={s.infoTexto}>
                         {ambiente.cidade} • {ambiente.temperatura}°C • umidade{" "}
                         {ambiente.umidade}%
@@ -293,6 +300,7 @@ export default function Historico({ atletaId }: Props) {
                           Risco principal:{" "}
                           {LABELS_CATEGORIA_RISCO[riscoPrincipal.categoria]}
                         </Text>
+
                         <Text style={s.riscoMensagem}>
                           {riscoPrincipal.mensagem}
                         </Text>
@@ -303,6 +311,13 @@ export default function Historico({ atletaId }: Props) {
                   {!riscoPrincipal && primeiroAlerta && (
                     <Text style={s.alerta}>• {primeiroAlerta}</Text>
                   )}
+
+                  <TouchableOpacity
+                    style={s.btnExportarSessao}
+                    onPress={() => handleExportarSessao(avaliacao)}
+                  >
+                    <Text style={s.btnExportarSessaoText}>Exportar sessão</Text>
+                  </TouchableOpacity>
                 </View>
               );
             })}
@@ -314,8 +329,14 @@ export default function Historico({ atletaId }: Props) {
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.background },
-  scroll: { padding: spacing.md, paddingBottom: 40 },
+  root: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  scroll: {
+    padding: spacing.md,
+    paddingBottom: 40,
+  },
   tituloRow: {
     flexDirection: "row",
     alignItems: "center",
@@ -506,6 +527,21 @@ const s = StyleSheet.create({
     color: "#555",
     fontSize: fontSize.xs,
     lineHeight: 16,
+  },
+  btnExportarSessao: {
+    alignSelf: "flex-start",
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    marginTop: spacing.sm,
+    backgroundColor: "#FFF",
+  },
+  btnExportarSessaoText: {
+    color: colors.primary,
+    fontSize: fontSize.sm,
+    fontWeight: "700",
   },
   alerta: {
     marginTop: spacing.sm,
