@@ -11,7 +11,10 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
+import { inserirUsuarioLocal } from "../database";
 import { colors, fontSize, radius, spacing } from "../theme";
+
+const INPUT_PLACEHOLDER = "#8A8580";
 
 export default function Cadastro({ navigation }: any) {
   const { login } = useAuth();
@@ -28,10 +31,12 @@ export default function Cadastro({ navigation }: any) {
       setErro("Preencha todos os campos.");
       return;
     }
+
     if (senha !== confirmarSenha) {
       setErro("As senhas não coincidem.");
       return;
     }
+
     if (senha.length < 6) {
       setErro("A senha deve ter pelo menos 6 caracteres.");
       return;
@@ -41,20 +46,35 @@ export default function Cadastro({ navigation }: any) {
     setErro("");
 
     try {
-      // Mock temporário — substituir por chamada real à API
+      const usuario = {
+        id: Date.now().toString(),
+        nome: nome.trim(),
+        email: email.trim().toLowerCase(),
+        senha,
+        perfil,
+        criadoEm: new Date().toISOString(),
+      };
+
+      inserirUsuarioLocal(usuario);
+
       const mockToken =
         "eyJhbGciOiJIUzI1NiJ9." +
-        btoa(JSON.stringify({
-          usuario: {
-            id: Date.now().toString(),
-            nome,
-            email,
-            perfil,
-          },
-          exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-        })) +
+        btoa(
+          JSON.stringify({
+            usuario: {
+              id: usuario.id,
+              nome: usuario.nome,
+              email: usuario.email,
+              perfil: usuario.perfil,
+            },
+            exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+          })
+        ) +
         ".assinatura";
+
       await login(mockToken);
+    } catch (error) {
+      setErro(error instanceof Error ? error.message : "Erro ao cadastrar usuário.");
     } finally {
       setCarregando(false);
     }
@@ -62,6 +82,9 @@ export default function Cadastro({ navigation }: any) {
 
   return (
     <SafeAreaView style={s.root}>
+      <View style={s.decorCircleTop} />
+      <View style={s.decorCircleBottom} />
+
       <ScrollView contentContainerStyle={s.scroll}>
         <View style={s.container}>
           <Image
@@ -69,13 +92,14 @@ export default function Cadastro({ navigation }: any) {
             style={s.logo}
             resizeMode="contain"
           />
+
           <Text style={s.titulo}>Criar conta</Text>
           <Text style={s.subtitulo}>DeltaH — Hidratação Esportiva</Text>
 
           <TextInput
             style={s.input}
             placeholder="Nome completo"
-            placeholderTextColor="#999"
+            placeholderTextColor={INPUT_PLACEHOLDER}
             value={nome}
             onChangeText={setNome}
             autoCapitalize="words"
@@ -84,7 +108,7 @@ export default function Cadastro({ navigation }: any) {
           <TextInput
             style={s.input}
             placeholder="Email"
-            placeholderTextColor="#999"
+            placeholderTextColor={INPUT_PLACEHOLDER}
             value={email}
             onChangeText={setEmail}
             keyboardType="email-address"
@@ -94,7 +118,7 @@ export default function Cadastro({ navigation }: any) {
           <TextInput
             style={s.input}
             placeholder="Senha"
-            placeholderTextColor="#999"
+            placeholderTextColor={INPUT_PLACEHOLDER}
             value={senha}
             onChangeText={setSenha}
             secureTextEntry
@@ -103,27 +127,42 @@ export default function Cadastro({ navigation }: any) {
           <TextInput
             style={s.input}
             placeholder="Confirmar senha"
-            placeholderTextColor="#999"
+            placeholderTextColor={INPUT_PLACEHOLDER}
             value={confirmarSenha}
             onChangeText={setConfirmarSenha}
             secureTextEntry
           />
 
           <Text style={s.perfilLabel}>Perfil</Text>
+
           <View style={s.perfilRow}>
             <TouchableOpacity
-              style={[s.perfilBtn, perfil === "nutricionista" && s.perfilBtnActive]}
+              style={[
+                s.perfilBtn,
+                perfil === "nutricionista" && s.perfilBtnActive,
+              ]}
               onPress={() => setPerfil("nutricionista")}
             >
-              <Text style={[s.perfilBtnText, perfil === "nutricionista" && s.perfilBtnTextActive]}>
+              <Text
+                style={[
+                  s.perfilBtnText,
+                  perfil === "nutricionista" && s.perfilBtnTextActive,
+                ]}
+              >
                 Nutricionista
               </Text>
             </TouchableOpacity>
+
             <TouchableOpacity
               style={[s.perfilBtn, perfil === "atleta" && s.perfilBtnActive]}
               onPress={() => setPerfil("atleta")}
             >
-              <Text style={[s.perfilBtnText, perfil === "atleta" && s.perfilBtnTextActive]}>
+              <Text
+                style={[
+                  s.perfilBtnText,
+                  perfil === "atleta" && s.perfilBtnTextActive,
+                ]}
+              >
                 Atleta
               </Text>
             </TouchableOpacity>
@@ -151,9 +190,38 @@ export default function Cadastro({ navigation }: any) {
 }
 
 const s = StyleSheet.create({
-  root: { flex: 1, backgroundColor: colors.background },
-  scroll: { flexGrow: 1, justifyContent: "center", padding: spacing.md },
+  root: {
+    flex: 1,
+    backgroundColor: "#FAF7F4",
+    overflow: "hidden",
+  },
+  decorCircleTop: {
+    position: "absolute",
+    top: -120,
+    right: -100,
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    backgroundColor: "rgba(214,48,49,0.08)",
+  },
+  decorCircleBottom: {
+    position: "absolute",
+    bottom: -140,
+    left: -120,
+    width: 320,
+    height: 320,
+    borderRadius: 160,
+    backgroundColor: "rgba(139,0,0,0.06)",
+  },
+  scroll: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: spacing.md,
+  },
   container: {
+    width: "100%",
+    maxWidth: 520,
     backgroundColor: colors.white,
     borderRadius: radius.lg,
     padding: spacing.xl,
@@ -161,7 +229,7 @@ const s = StyleSheet.create({
     elevation: 6,
     shadowColor: "#000",
     shadowOpacity: 0.08,
-    shadowRadius: 10,
+    shadowRadius: 12,
   },
   logo: {
     width: 56,
@@ -176,17 +244,19 @@ const s = StyleSheet.create({
   },
   subtitulo: {
     fontSize: fontSize.sm,
-    color: "#999",
+    color: "#8A8580",
     marginBottom: spacing.lg,
   },
   input: {
     width: "100%",
-    backgroundColor: colors.background,
+    backgroundColor: "#F1ECE7",
     borderRadius: radius.md,
     padding: spacing.md,
     fontSize: fontSize.md,
     color: colors.text,
     marginBottom: spacing.sm,
+    borderWidth: 1,
+    borderColor: "#E6DDD5",
   },
   perfilLabel: {
     alignSelf: "flex-start",
@@ -206,8 +276,9 @@ const s = StyleSheet.create({
     padding: spacing.sm,
     borderRadius: radius.md,
     borderWidth: 2,
-    borderColor: colors.border,
+    borderColor: "#E6DDD5",
     alignItems: "center",
+    backgroundColor: colors.white,
   },
   perfilBtnActive: {
     borderColor: colors.primary,
@@ -215,8 +286,8 @@ const s = StyleSheet.create({
   },
   perfilBtnText: {
     fontSize: fontSize.sm,
-    color: colors.textMuted,
-    fontWeight: "600",
+    color: "#666",
+    fontWeight: "700",
   },
   perfilBtnTextActive: {
     color: colors.primary,
@@ -245,7 +316,7 @@ const s = StyleSheet.create({
   },
   btnLoginText: {
     fontSize: fontSize.sm,
-    color: "#999",
+    color: "#8A8580",
   },
   btnLoginLink: {
     color: colors.primary,
