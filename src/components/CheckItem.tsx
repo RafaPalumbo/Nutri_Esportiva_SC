@@ -9,13 +9,20 @@ interface Props {
   textColor?: string;
 }
 
-export default function CheckItem({ label, checked, onPress, textColor }: Props) {
+export default function CheckItem({
+  label,
+  checked,
+  onPress,
+  textColor,
+}: Props) {
   return (
     <TouchableOpacity style={s.row} onPress={onPress}>
       <View style={[s.box, checked && s.boxChecked]}>
         {checked && <Text style={s.mark}>✓</Text>}
       </View>
-      <Text style={[s.label, textColor ? { color: textColor } : {}]}>{label}</Text>
+      <Text style={[s.label, textColor ? { color: textColor } : {}]}>
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }

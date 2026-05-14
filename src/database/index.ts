@@ -1,6 +1,7 @@
 import { Avaliacao, Atleta, Equipe, UsuarioLocal } from "../types";
 
-const isWeb = typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+const isWeb =
+  typeof window !== "undefined" && typeof window.localStorage !== "undefined";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let db: any = null;
@@ -53,10 +54,11 @@ export function initDatabase(): void {
 export function inserirEquipe(equipe: Equipe): void {
   if (isWeb) return;
 
-  db.runSync(
-    `INSERT INTO equipes (id, nome, esporte) VALUES (?, ?, ?)`,
-    [equipe.id, equipe.nome, equipe.esporte]
-  );
+  db.runSync(`INSERT INTO equipes (id, nome, esporte) VALUES (?, ?, ?)`, [
+    equipe.id,
+    equipe.nome,
+    equipe.esporte,
+  ]);
 }
 
 export function listarEquipes(): Equipe[] {
@@ -70,7 +72,13 @@ export function inserirAtleta(atleta: Atleta): void {
 
   db.runSync(
     `INSERT INTO atletas (id, nome, dataNascimento, esporte, equipeId) VALUES (?, ?, ?, ?, ?)`,
-    [atleta.id, atleta.nome, atleta.dataNascimento, atleta.esporte, atleta.equipeId ?? null]
+    [
+      atleta.id,
+      atleta.nome,
+      atleta.dataNascimento,
+      atleta.esporte,
+      atleta.equipeId ?? null,
+    ],
   );
 }
 
@@ -83,7 +91,9 @@ export function listarAtletas(): Atleta[] {
 export function listarAtletasPorEquipe(equipeId: string): Atleta[] {
   if (isWeb) return [];
 
-  return db.getAllSync(`SELECT * FROM atletas WHERE equipeId = ?`, [equipeId]) as Atleta[];
+  return db.getAllSync(`SELECT * FROM atletas WHERE equipeId = ?`, [
+    equipeId,
+  ]) as Atleta[];
 }
 
 export function listarUsuariosLocais(): UsuarioLocal[] {
@@ -100,12 +110,16 @@ export function buscarUsuarioLocalPorEmail(email: string): UsuarioLocal | null {
 
   if (isWeb) {
     const usuarios = listarUsuariosLocais();
-    return usuarios.find((usuario) => usuario.email.toLowerCase() === emailNormalizado) ?? null;
+    return (
+      usuarios.find(
+        (usuario) => usuario.email.toLowerCase() === emailNormalizado,
+      ) ?? null
+    );
   }
 
   const usuario = db.getFirstSync(
     `SELECT * FROM usuarios WHERE lower(email) = ?`,
-    [emailNormalizado]
+    [emailNormalizado],
   ) as UsuarioLocal | null;
 
   return usuario ?? null;
@@ -140,11 +154,14 @@ export function inserirUsuarioLocal(usuario: UsuarioLocal): void {
       usuarioNormalizado.senha,
       usuarioNormalizado.perfil,
       usuarioNormalizado.criadoEm,
-    ]
+    ],
   );
 }
 
-export function autenticarUsuarioLocal(email: string, senha: string): UsuarioLocal | null {
+export function autenticarUsuarioLocal(
+  email: string,
+  senha: string,
+): UsuarioLocal | null {
   const usuario = buscarUsuarioLocalPorEmail(email);
 
   if (!usuario) return null;
@@ -156,7 +173,9 @@ export function autenticarUsuarioLocal(email: string, senha: string): UsuarioLoc
 export function inserirAvaliacao(avaliacao: Avaliacao): void {
   if (isWeb) {
     const key = `avaliacoes_${avaliacao.atletaId}`;
-    const existentes: Avaliacao[] = JSON.parse(localStorage.getItem(key) ?? "[]");
+    const existentes: Avaliacao[] = JSON.parse(
+      localStorage.getItem(key) ?? "[]",
+    );
     existentes.unshift(avaliacao);
     localStorage.setItem(key, JSON.stringify(existentes));
     return;
@@ -164,7 +183,12 @@ export function inserirAvaliacao(avaliacao: Avaliacao): void {
 
   db.runSync(
     `INSERT INTO avaliacoes (id, atletaId, data, dados) VALUES (?, ?, ?, ?)`,
-    [avaliacao.id, avaliacao.atletaId, avaliacao.data, JSON.stringify(avaliacao)]
+    [
+      avaliacao.id,
+      avaliacao.atletaId,
+      avaliacao.data,
+      JSON.stringify(avaliacao),
+    ],
   );
 }
 
@@ -176,7 +200,7 @@ export function listarAvaliacoesPorAtleta(atletaId: string): Avaliacao[] {
 
   const rows = db.getAllSync(
     `SELECT dados FROM avaliacoes WHERE atletaId = ? ORDER BY data DESC`,
-    [atletaId]
+    [atletaId],
   ) as { dados: string }[];
 
   return rows.map((row) => JSON.parse(row.dados) as Avaliacao);

@@ -22,7 +22,7 @@ function obterRiscoPrincipal(riscos?: RiscoTriagem[]): RiscoTriagem | null {
   if (!riscos || riscos.length === 0) return null;
 
   return riscos.reduce((maior, atual) =>
-    PESO_RISCO[atual.nivel] > PESO_RISCO[maior.nivel] ? atual : maior
+    PESO_RISCO[atual.nivel] > PESO_RISCO[maior.nivel] ? atual : maior,
   );
 }
 
@@ -31,11 +31,14 @@ function escaparCsv(valor: unknown): string {
 
   const texto = String(valor);
   const precisaEscapar =
-    texto.includes(",") || texto.includes("\"") || texto.includes("\n") || texto.includes("\r");
+    texto.includes(",") ||
+    texto.includes('"') ||
+    texto.includes("\n") ||
+    texto.includes("\r");
 
   if (!precisaEscapar) return texto;
 
-  return `"${texto.replace(/"/g, "\"\"")}"`;
+  return `"${texto.replace(/"/g, '""')}"`;
 }
 
 function gerarNomeArquivo(): string {

@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
+<<<<<<< HEAD
 import {
   View,
   Text,
@@ -7,6 +8,9 @@ import {
   StyleSheet,
   ScrollView,
 } from "react-native";
+=======
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+>>>>>>> ce8714f08707b927353cc5d59b253d758d00f68c
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { colors, fontSize, radius, spacing } from "../theme";
@@ -67,7 +71,28 @@ export default function Conta() {
         <TouchableOpacity style={s.btnLogout} onPress={logout}>
           <Text style={s.btnLogoutText}>Sair</Text>
         </TouchableOpacity>
+<<<<<<< HEAD
       </ScrollView>
+=======
+
+        <TouchableOpacity style={s.menuItem}>
+          <Text style={s.menuItemText}> Relatórios</Text>
+          <Text style={s.menuArrow}>&gt;</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={s.menuItem}
+          onPress={() => navigation.navigate("LGPD")}
+        >
+          <Text style={s.menuItemText}> Privacidade e LGPD</Text>
+          <Text style={s.menuArrow}>&gt;</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={s.btnLogout} onPress={logout}>
+        <Text style={s.btnLogoutText}>Sair</Text>
+      </TouchableOpacity>
+>>>>>>> ce8714f08707b927353cc5d59b253d758d00f68c
     </SafeAreaView>
   );
 }

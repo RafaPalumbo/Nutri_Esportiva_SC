@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity, Text, View, TextInput } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  TextInput,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import Header from "../components/Header";
 import CheckItem from "../components/CheckItem";
@@ -15,13 +22,17 @@ export default function PesoEstadoBasal({ navigation }: any) {
   const [corSelecionada, setCorSelecionada] = useState<number | null>(null);
   const [sede, setSede] = useState(0);
   const [historicoHidratacao, setHistoricoHidratacao] = useState("");
-  const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>([]);
+  const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>(
+    [],
+  );
   const [outro, setOutro] = useState("");
   const [ambiente, setAmbiente] = useState<DadosAmbiente | null>(null);
 
   const toggleSintoma = (sintoma: string) => {
     setSintomasSelecionados((prev) =>
-      prev.includes(sintoma) ? prev.filter((s) => s !== sintoma) : [...prev, sintoma]
+      prev.includes(sintoma)
+        ? prev.filter((s) => s !== sintoma)
+        : [...prev, sintoma],
     );
   };
 
@@ -195,8 +206,17 @@ const s = StyleSheet.create({
     borderRadius: 15,
     padding: spacing.xs,
   },
-  dot: { width: 18, height: 18, borderRadius: 9, backgroundColor: "rgba(255,255,255,0.4)" },
+  dot: {
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: "rgba(255,255,255,0.4)",
+  },
   dotActive: { backgroundColor: colors.white },
   avancar: { alignSelf: "flex-end", marginTop: spacing.lg },
-  avancarText: { color: colors.white, fontWeight: "700", fontSize: fontSize.md },
+  avancarText: {
+    color: colors.white,
+    fontWeight: "700",
+    fontSize: fontSize.md,
+  },
 });

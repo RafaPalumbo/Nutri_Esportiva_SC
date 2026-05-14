@@ -82,7 +82,7 @@ function obterRiscoPrincipal(riscos?: RiscoTriagem[]): RiscoTriagem | null {
   if (!riscos || riscos.length === 0) return null;
 
   return riscos.reduce((maior, atual) =>
-    PESO_RISCO[atual.nivel] > PESO_RISCO[maior.nivel] ? atual : maior
+    PESO_RISCO[atual.nivel] > PESO_RISCO[maior.nivel] ? atual : maior,
   );
 }
 
@@ -101,19 +101,19 @@ export default function Historico({ atletaId }: Props) {
     useCallback(() => {
       const dados = listarAvaliacoesPorAtleta(atletaId);
       setAvaliacoes(dados);
-    }, [atletaId])
+    }, [atletaId]),
   );
 
   const avaliacoesComResultado = useMemo(
     () => avaliacoes.filter((avaliacao) => avaliacao.resultado),
-    [avaliacoes]
+    [avaliacoes],
   );
 
   const totalSessoes = avaliacoesComResultado.length;
 
   const mediaTaxaSudorese = useMemo(() => {
     const taxas = avaliacoesComResultado.map(
-      (avaliacao) => avaliacao.resultado?.taxaSudorese ?? 0
+      (avaliacao) => avaliacao.resultado?.taxaSudorese ?? 0,
     );
 
     return Math.round(calcularMedia(taxas));
@@ -121,7 +121,7 @@ export default function Historico({ atletaId }: Props) {
 
   const mediaPerdaPercentual = useMemo(() => {
     const perdas = avaliacoesComResultado.map(
-      (avaliacao) => avaliacao.resultado?.perdaHidricaPercentual ?? 0
+      (avaliacao) => avaliacao.resultado?.perdaHidricaPercentual ?? 0,
     );
 
     return parseFloat(calcularMedia(perdas).toFixed(2));
@@ -131,7 +131,7 @@ export default function Historico({ atletaId }: Props) {
     return avaliacoesComResultado.reduce((total, avaliacao) => {
       const riscos = avaliacao.resultado?.riscos ?? [];
       const possuiRiscoImportante = riscos.some(
-        (risco) => risco.nivel === "alto" || risco.nivel === "critico"
+        (risco) => risco.nivel === "alto" || risco.nivel === "critico",
       );
 
       return possuiRiscoImportante ? total + 1 : total;
@@ -174,7 +174,9 @@ export default function Historico({ atletaId }: Props) {
 
         {totalSessoes === 0 ? (
           <View style={s.vazio}>
-            <Text style={s.vazioTexto}>Nenhuma avaliação registrada ainda.</Text>
+            <Text style={s.vazioTexto}>
+              Nenhuma avaliação registrada ainda.
+            </Text>
           </View>
         ) : (
           <>
@@ -198,7 +200,9 @@ export default function Historico({ atletaId }: Props) {
                 </View>
 
                 <View style={s.painelMetric}>
-                  <Text style={s.painelValor}>{totalRiscosAltosOuCriticos}</Text>
+                  <Text style={s.painelValor}>
+                    {totalRiscosAltosOuCriticos}
+                  </Text>
                   <Text style={s.painelLabel}>risco alto/crítico</Text>
                 </View>
               </View>
@@ -216,7 +220,9 @@ export default function Historico({ atletaId }: Props) {
                 <View key={avaliacao.id} style={s.card}>
                   <View style={s.cardTopo}>
                     <View style={s.cardDataContainer}>
-                      <Text style={s.cardData}>{formatarDataHora(avaliacao.data)}</Text>
+                      <Text style={s.cardData}>
+                        {formatarDataHora(avaliacao.data)}
+                      </Text>
 
                       {avaliacao.preExercicio.modalidade && (
                         <Text style={s.cardSubInfo}>
@@ -242,7 +248,9 @@ export default function Historico({ atletaId }: Props) {
 
                   <View style={s.cardMetrics}>
                     <View style={s.metric}>
-                      <Text style={s.metricValor}>{resultado.taxaSudorese}</Text>
+                      <Text style={s.metricValor}>
+                        {resultado.taxaSudorese}
+                      </Text>
                       <Text style={s.metricLabel}>ml/h</Text>
                     </View>
 
@@ -277,7 +285,9 @@ export default function Historico({ atletaId }: Props) {
                       )}
 
                       {typeof ambiente.vento === "number" && (
-                        <Text style={s.infoTexto}>Vento: {ambiente.vento} km/h</Text>
+                        <Text style={s.infoTexto}>
+                          Vento: {ambiente.vento} km/h
+                        </Text>
                       )}
                     </View>
                   )}
@@ -287,7 +297,9 @@ export default function Historico({ atletaId }: Props) {
                       <View
                         style={[
                           s.riscoBadge,
-                          { backgroundColor: CORES_RISCO[riscoPrincipal.nivel] },
+                          {
+                            backgroundColor: CORES_RISCO[riscoPrincipal.nivel],
+                          },
                         ]}
                       >
                         <Text style={s.riscoBadgeText}>

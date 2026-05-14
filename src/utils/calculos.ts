@@ -24,7 +24,7 @@ function gerarAlertas(
   percentual: number,
   corUrina: number,
   sintomas: string[],
-  balanco: number
+  balanco: number,
 ): string[] {
   const alertas: string[] = [];
 
@@ -48,7 +48,7 @@ function gerarAlertas(
 
 export function calcularResultado(
   pre: DadosPreExercicio,
-  pos: DadosPosExercicio
+  pos: DadosPosExercicio,
 ): ResultadoHidratacao {
   const duracaoHoras = pos.duracaoExercicio / 60;
 
