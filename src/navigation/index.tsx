@@ -9,6 +9,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "../theme";
 import { DadosPreExercicio, DadosPosExercicio as DadosPosExercicioType } from "../types";
 
+import LGPD from "../screens/LGPD";
 import Login from "../screens/Login";
 import Cadastro from "../screens/Cadastro";
 import PesoEstadoBasal from "../screens/PesoEstadoBasal";
@@ -21,6 +22,7 @@ export type RootStackParamList = {
   Login: undefined;
   Cadastro: undefined;
   MainTabs: undefined;
+  LGPD: undefined;
   DadosPosExercicio: { preExercicio: DadosPreExercicio };
   Resultado: {
     preExercicio: DadosPreExercicio;
@@ -128,6 +130,7 @@ export default function Navigation() {
               <Stack.Screen name="MainTabs" component={MainTabs} />
               <Stack.Screen name="DadosPosExercicio" component={DadosPosExercicio} />
               <Stack.Screen name="Resultado" component={Resultado} />
+              <Stack.Screen name="LGPD" component={LGPD} />
             </>
           ) : (
             <>

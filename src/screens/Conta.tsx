@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   View,
   Text,
@@ -11,6 +12,7 @@ import { colors, fontSize, radius, spacing } from "../theme";
 
 export default function Conta() {
   const { usuario, logout } = useAuth();
+  const navigation = useNavigation<any>();
 
   return (
     <SafeAreaView style={s.root}>
@@ -42,9 +44,10 @@ export default function Conta() {
           <Text style={s.menuArrow}>&gt;</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={s.menuItem}>
+        <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate("LGPD")}>
           <Text style={s.menuItemText}> Privacidade e LGPD</Text>
           <Text style={s.menuArrow}>&gt;</Text>
+          
         </TouchableOpacity>
       </View>
 
