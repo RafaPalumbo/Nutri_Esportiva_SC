@@ -5,6 +5,7 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
@@ -16,44 +17,57 @@ export default function Conta() {
 
   return (
     <SafeAreaView style={s.root}>
-      <View style={s.header}>
-        <Text style={s.titulo}>Minha Conta</Text>
-      </View>
-
-      <View style={s.card}>
-        <View style={s.avatar}>
-          <Text style={s.avatarText}>
-            {usuario?.nome?.charAt(0).toUpperCase() ?? "?"}
-          </Text>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{
+          paddingBottom: 120,
+        }}
+      >
+        <View style={s.header}>
+          <Text style={s.titulo}>Minha Conta</Text>
         </View>
-        <Text style={s.nome}>{usuario?.nome}</Text>
-        <Text style={s.email}>{usuario?.email}</Text>
-        <View style={s.badge}>
-          <Text style={s.badgeText}>{usuario?.perfil}</Text>
+
+        <View style={s.card}>
+          <View style={s.avatar}>
+            <Text style={s.avatarText}>
+              {usuario?.nome?.charAt(0).toUpperCase() ?? "?"}
+            </Text>
+          </View>
+          <Text style={s.nome}>{usuario?.nome}</Text>
+          <Text style={s.email}>{usuario?.email}</Text>
+          <View style={s.badge}>
+            <Text style={s.badgeText}>{usuario?.perfil}</Text>
+          </View>
         </View>
-      </View>
 
-      <View style={s.menu}>
-        <TouchableOpacity style={s.menuItem}>
-          <Text style={s.menuItemText}> Atletas e Equipes</Text>
-          <Text style={s.menuArrow}>&gt;</Text>
+        <View style={s.menu}>
+          <TouchableOpacity style={s.menuItem}>
+            <Text style={s.menuItemText}> Atletas e Equipes</Text>
+            <Text style={s.menuArrow}>&gt;</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={s.menuItem}>
+            <Text style={s.menuItemText}> Relatórios</Text>
+            <Text style={s.menuArrow}>&gt;</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate("LGPD")}>
+            <Text style={s.menuItemText}> Privacidade e LGPD</Text>
+            <Text style={s.menuArrow}>&gt;</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={s.menuItem}>
+            <Text style={s.menuItemText}>
+              Perguntas frequentes
+            </Text>
+            <Text style={s.menuArrow}>&gt;</Text>
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity style={s.btnLogout} onPress={logout}>
+          <Text style={s.btnLogoutText}>Sair</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity style={s.menuItem}>
-          <Text style={s.menuItemText}> Relatórios</Text>
-          <Text style={s.menuArrow}>&gt;</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate("LGPD")}>
-          <Text style={s.menuItemText}> Privacidade e LGPD</Text>
-          <Text style={s.menuArrow}>&gt;</Text>
-          
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={s.btnLogout} onPress={logout}>
-        <Text style={s.btnLogoutText}>Sair</Text>
-      </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -127,7 +141,7 @@ const s = StyleSheet.create({
     backgroundColor: colors.white,
     marginHorizontal: spacing.md,
     borderRadius: radius.lg,
-    overflow: "hidden",
+    overflow: "visible",
     elevation: 3,
     shadowColor: "#000",
     shadowOpacity: 0.08,
@@ -151,7 +165,6 @@ const s = StyleSheet.create({
   },
   btnLogout: {
     margin: spacing.md,
-    marginTop: "auto",
     backgroundColor: colors.white,
     borderRadius: radius.md,
     padding: spacing.md,
