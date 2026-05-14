@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { obterToken, removerToken, salvarToken, tokenValido, decodificarToken, Usuario } from "../auth";
+import {
+  obterToken,
+  removerToken,
+  salvarToken,
+  tokenValido,
+  decodificarToken,
+  Usuario,
+} from "../auth";
 
 interface AuthContextData {
   usuario: Usuario | null;
@@ -48,7 +55,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ usuario, token, logado: !!usuario, login, logout, carregando }}>
+    <AuthContext.Provider
+      value={{ usuario, token, logado: !!usuario, login, logout, carregando }}
+    >
       {children}
     </AuthContext.Provider>
   );

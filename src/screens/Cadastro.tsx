@@ -22,7 +22,9 @@ export default function Cadastro({ navigation }: any) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [perfil, setPerfil] = useState<"nutricionista" | "atleta">("nutricionista");
+  const [perfil, setPerfil] = useState<"nutricionista" | "atleta">(
+    "nutricionista",
+  );
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState("");
 
@@ -68,13 +70,15 @@ export default function Cadastro({ navigation }: any) {
               perfil: usuario.perfil,
             },
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-          })
+          }),
         ) +
         ".assinatura";
 
       await login(mockToken);
     } catch (error) {
-      setErro(error instanceof Error ? error.message : "Erro ao cadastrar usuário.");
+      setErro(
+        error instanceof Error ? error.message : "Erro ao cadastrar usuário.",
+      );
     } finally {
       setCarregando(false);
     }
@@ -170,7 +174,11 @@ export default function Cadastro({ navigation }: any) {
 
           {erro ? <Text style={s.erro}>{erro}</Text> : null}
 
-          <TouchableOpacity style={s.btn} onPress={handleCadastro} disabled={carregando}>
+          <TouchableOpacity
+            style={s.btn}
+            onPress={handleCadastro}
+            disabled={carregando}
+          >
             {carregando ? (
               <ActivityIndicator color={colors.white} />
             ) : (
@@ -178,7 +186,10 @@ export default function Cadastro({ navigation }: any) {
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={s.btnLogin} onPress={() => navigation.goBack()}>
+          <TouchableOpacity
+            style={s.btnLogin}
+            onPress={() => navigation.goBack()}
+          >
             <Text style={s.btnLoginText}>
               Já tem conta? <Text style={s.btnLoginLink}>Entrar</Text>
             </Text>

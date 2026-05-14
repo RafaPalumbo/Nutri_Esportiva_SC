@@ -66,33 +66,50 @@ export default function Resultado({ navigation, route }: any) {
 
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Perda Hídrica</Text>
-            <Text style={s.metricValor}>{resultado.perdaHidricaPercentual}%</Text>
+            <Text style={s.metricValor}>
+              {resultado.perdaHidricaPercentual}%
+            </Text>
           </View>
 
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Classificação</Text>
-            <View style={[s.badge, { backgroundColor: CORES_CLASSIFICACAO[resultado.classificacaoPerda] }]}>
-              <Text style={s.badgeText}>{LABELS_CLASSIFICACAO[resultado.classificacaoPerda]}</Text>
+            <View
+              style={[
+                s.badge,
+                {
+                  backgroundColor:
+                    CORES_CLASSIFICACAO[resultado.classificacaoPerda],
+                },
+              ]}
+            >
+              <Text style={s.badgeText}>
+                {LABELS_CLASSIFICACAO[resultado.classificacaoPerda]}
+              </Text>
             </View>
           </View>
 
           <View style={s.metricRow}>
             <Text style={s.metricLabel}>Balanço Hídrico</Text>
             <Text style={s.metricValor}>
-              {resultado.balanco > 0 ? "+" : ""}{resultado.balanco} ml
+              {resultado.balanco > 0 ? "+" : ""}
+              {resultado.balanco} ml
             </Text>
           </View>
 
           <View style={[s.metricRow, s.destaque]}>
             <Text style={s.metricLabel}>Repor ainda</Text>
-            <Text style={s.metricValorDestaque}>{resultado.reposicaoRecomendada} ml</Text>
+            <Text style={s.metricValorDestaque}>
+              {resultado.reposicaoRecomendada} ml
+            </Text>
           </View>
 
           {resultado.alertas.length > 0 && (
             <View style={s.alertasContainer}>
               <Text style={s.alertasTitulo}>Alertas</Text>
               {resultado.alertas.map((alerta, i) => (
-                <Text key={i} style={s.alertaItem}>• {alerta}</Text>
+                <Text key={i} style={s.alertaItem}>
+                  • {alerta}
+                </Text>
               ))}
             </View>
           )}

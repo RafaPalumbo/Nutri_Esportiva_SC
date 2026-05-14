@@ -1,11 +1,6 @@
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../context/AuthContext";
 import { colors, fontSize, radius, spacing } from "../theme";
@@ -44,10 +39,12 @@ export default function Conta() {
           <Text style={s.menuArrow}>&gt;</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={s.menuItem} onPress={() => navigation.navigate("LGPD")}>
+        <TouchableOpacity
+          style={s.menuItem}
+          onPress={() => navigation.navigate("LGPD")}
+        >
           <Text style={s.menuItemText}> Privacidade e LGPD</Text>
           <Text style={s.menuArrow}>&gt;</Text>
-          
         </TouchableOpacity>
       </View>
 

@@ -28,12 +28,16 @@ export default function DadosPosExercicio({ navigation, route }: Props) {
   const [massaPos, setMassaPos] = useState("");
   const [volumeIngerido, setVolumeIngerido] = useState("");
   const [duracao, setDuracao] = useState("");
-  const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>([]);
+  const [sintomasSelecionados, setSintomasSelecionados] = useState<string[]>(
+    [],
+  );
   const [roupaEncharcada, setRoupaEncharcada] = useState(false);
 
   const toggleSintoma = (sintoma: string) => {
     setSintomasSelecionados((prev) =>
-      prev.includes(sintoma) ? prev.filter((s) => s !== sintoma) : [...prev, sintoma]
+      prev.includes(sintoma)
+        ? prev.filter((s) => s !== sintoma)
+        : [...prev, sintoma],
     );
   };
 
@@ -52,7 +56,7 @@ export default function DadosPosExercicio({ navigation, route }: Props) {
 
   return (
     <View style={s.root}>
-      <Header titulo= "DeltaH" />
+      <Header titulo="DeltaH" />
       <ScrollView contentContainerStyle={s.scroll}>
         <Text style={s.sectionTitle}>• Dados Pós-Exercício.</Text>
 
@@ -71,7 +75,9 @@ export default function DadosPosExercicio({ navigation, route }: Props) {
             onChangeText={(t) => setMassaPos(t.replace(",", "."))}
           />
 
-          <Text style={s.label}>Volume de fluidos ingeridos durante o treino (ml) *</Text>
+          <Text style={s.label}>
+            Volume de fluidos ingeridos durante o treino (ml) *
+          </Text>
           <TextInput
             style={s.input}
             placeholder="ex: 500"

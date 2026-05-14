@@ -1,5 +1,11 @@
 import React from "react";
-import { TextInput, Text, View, StyleSheet, KeyboardTypeOptions } from "react-native";
+import {
+  TextInput,
+  Text,
+  View,
+  StyleSheet,
+  KeyboardTypeOptions,
+} from "react-native";
 import { colors, fontSize, radius, spacing } from "../theme";
 
 interface Props {
@@ -10,7 +16,13 @@ interface Props {
   keyboardType?: KeyboardTypeOptions;
 }
 
-export default function Input({ label, placeholder, value, onChangeText, keyboardType }: Props) {
+export default function Input({
+  label,
+  placeholder,
+  value,
+  onChangeText,
+  keyboardType,
+}: Props) {
   return (
     <View style={s.container}>
       <Text style={s.label}>{label}</Text>

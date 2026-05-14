@@ -69,7 +69,7 @@ export default function Login({ navigation }: Props) {
           JSON.stringify({
             usuario,
             exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
-          })
+          }),
         ) +
         ".assinatura";
 
@@ -115,7 +115,11 @@ export default function Login({ navigation }: Props) {
 
         {erro ? <Text style={s.erro}>{erro}</Text> : null}
 
-        <TouchableOpacity style={s.btn} onPress={handleLogin} disabled={carregando}>
+        <TouchableOpacity
+          style={s.btn}
+          onPress={handleLogin}
+          disabled={carregando}
+        >
           {carregando ? (
             <ActivityIndicator color={colors.white} />
           ) : (

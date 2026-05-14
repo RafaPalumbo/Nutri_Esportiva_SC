@@ -19,8 +19,7 @@ async function buscarClima(): Promise<DadosAmbiente> {
 }
 
 function gerarDica(clima: DadosAmbiente): string {
-  if (clima.chuva)
-    return "Previsão de chuva. Atenção à hipotermia pós-treino.";
+  if (clima.chuva) return "Previsão de chuva. Atenção à hipotermia pós-treino.";
   if (clima.temperatura >= 32)
     return "Calor intenso. Aumente a ingestão hídrica antes do treino.";
   if (clima.temperatura >= 26)

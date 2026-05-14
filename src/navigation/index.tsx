@@ -7,7 +7,10 @@ import { useAuth } from "../context/AuthContext";
 import { ActivityIndicator, View, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { colors } from "../theme";
-import { DadosPreExercicio, DadosPosExercicio as DadosPosExercicioType } from "../types";
+import {
+  DadosPreExercicio,
+  DadosPosExercicio as DadosPosExercicioType,
+} from "../types";
 
 import LGPD from "../screens/LGPD";
 import Login from "../screens/Login";
@@ -128,7 +131,10 @@ export default function Navigation() {
           {logado ? (
             <>
               <Stack.Screen name="MainTabs" component={MainTabs} />
-              <Stack.Screen name="DadosPosExercicio" component={DadosPosExercicio} />
+              <Stack.Screen
+                name="DadosPosExercicio"
+                component={DadosPosExercicio}
+              />
               <Stack.Screen name="Resultado" component={Resultado} />
               <Stack.Screen name="LGPD" component={LGPD} />
             </>
